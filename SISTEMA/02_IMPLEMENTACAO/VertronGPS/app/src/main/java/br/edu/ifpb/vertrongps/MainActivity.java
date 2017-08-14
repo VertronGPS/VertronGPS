@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // SOBRESCREVENDO MÉTODO QUE É CHAMADO SEMPRE QUE UMA REQUISIÇÃO É SOLICITADA
+    // SOBRESCREVENDO MÉTODO QUE É CHAMADO SEMPRE QUE UMA REQUISIÇÃO DE PERMISSÃO É SOLICITADA
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_SEND_SMS) {
