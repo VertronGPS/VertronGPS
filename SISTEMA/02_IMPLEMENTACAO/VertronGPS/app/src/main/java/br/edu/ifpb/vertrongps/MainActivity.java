@@ -1,22 +1,21 @@
 package br.edu.ifpb.vertrongps;
 
 import android.Manifest;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    String mensagem;
-    String numeroTelefone;
-    Button botaoEnviar;
+    private String mensagem;
+    private String numeroTelefone;
+    private Button botaoEnviar;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -29,37 +28,79 @@ public class MainActivity extends AppCompatActivity {
         this.botaoEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enviarSMS(v);
+                controlarSMS(v);
             }
         });
 
     }
 
-    public void enviarSMS(View v) {
+    public void controlarSMS(View v) {
 
-        try{
+        try {
 
-            int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
+            // VERIFICANDO SE É PRECISO PERDIR A PERMISSÃO PARA ENVIAR SMS
+            // OBS.: A PARTIR DO MARSHMALLOW É PRECISO
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+                enviarSMS();
+            } else {
 
-            if(permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getApplicationContext(), "Não há permissão para enviar SMS.", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 255);
+                // CASO NÃO HAJA PERMISSÃO PARA ENVIAR SMS, UMA BREVE EXPLICAÇÃO SERÁ EXIBIDA
+                if (shouldShowRequestPermissionRationale(Manifest.permission.SEND_SMS)) {
+                    Toast.makeText(this, "É necessária permissão para enviar SMS.", Toast.LENGTH_LONG).show();
+                }
+
+                // SOLICITANTO PERMISSÃO PARA ENVIAR SMS
+                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 255);
+
+                // VERIFICANDO SE A PERMISSÃO FOI CONCEDIDA
+                if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                    alert.setTitle("Confirmar");
+                    alert.setMessage("Tem certeza que deseja enviar? Taxas de operadoras poderão ser cobradas.");
+                    alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            enviarSMS();
+                            dialog.dismiss();
+
+                        }
+                    });
+
+                    alert.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+
+                    });
+
+                    alert.show();
+
+                } else {
+                    Toast.makeText(this, "Sem a permissão não é possível enviar SMS.", Toast.LENGTH_LONG).show();
+                }
+
             }
 
-            else {
-                Log.i("Mensagem", "Já há permissão para envio de SMS.");
-            }
-
-            SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage(this.numeroTelefone, null, this.mensagem, null, null);
-            Toast.makeText(getApplicationContext(), "Mensagem enviada.", Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {
 
-            Toast.makeText(getApplicationContext(), "Falha ao enviar mensagem SMS.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Falha ao enviar mensagem SMS.", Toast.LENGTH_LONG).show();
             e.printStackTrace();
 
         }
 
     }
+
+    public void enviarSMS() {
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(this.numeroTelefone, null, this.mensagem, null, null);
+        Toast.makeText(getApplicationContext(), "Enviando mensagem.", Toast.LENGTH_LONG).show();
+    }
+
 }
