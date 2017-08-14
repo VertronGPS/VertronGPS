@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.view.View;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private String mensagem;
     private String numeroTelefone;
     private Button botaoEnviar;
+    private static final int REQUEST_SEND_SMS = 255;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -31,6 +33,23 @@ public class MainActivity extends AppCompatActivity {
                 controlarSMS(v);
             }
         });
+
+    }
+
+    // SOBRESCREVENDO MÉTODO QUE É CHAMADO SEMPRE QUE UMA REQUISIÇÃO É SOLICITADA
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_SEND_SMS) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                enviarSMS();
+            }
+
+        }
+
+        else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
 
     }
 
@@ -50,43 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // SOLICITANTO PERMISSÃO PARA ENVIAR SMS
-                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 255);
-
-                // VERIFICANDO SE A PERMISSÃO FOI CONCEDIDA
-                if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-
-
-                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                    alert.setTitle("Confirmar");
-                    alert.setMessage("Tem certeza que deseja enviar? Taxas de operadoras poderão ser cobradas.");
-                    alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            enviarSMS();
-                            dialog.dismiss();
-
-                        }
-                    });
-
-                    alert.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-
-                    });
-
-                    alert.show();
-
-                } else {
-                    Toast.makeText(this, "Sem a permissão não é possível enviar SMS.", Toast.LENGTH_LONG).show();
-                }
+                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, REQUEST_SEND_SMS);
 
             }
-
 
         } catch (Exception e) {
 
@@ -98,9 +83,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void enviarSMS() {
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(this.numeroTelefone, null, this.mensagem, null, null);
-        Toast.makeText(getApplicationContext(), "Enviando mensagem.", Toast.LENGTH_LONG).show();
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Confirmar");
+        alert.setMessage("Tem certeza que deseja enviar? Taxas de operadoras poderão ser cobradas.");
+        alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // CÓDIGO QUE REALMENTE ENVIA O SMS
+                SmsManager sms = SmsManager.getDefault();
+                sms.sendTextMessage(numeroTelefone, null, mensagem, null, null);
+                Toast.makeText(getApplicationContext(), "Enviando mensagem.", Toast.LENGTH_LONG).show();
+
+                dialog.dismiss();
+
+            }
+        });
+
+        alert.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+
+        });
+
+        alert.show();
+
     }
 
 }
