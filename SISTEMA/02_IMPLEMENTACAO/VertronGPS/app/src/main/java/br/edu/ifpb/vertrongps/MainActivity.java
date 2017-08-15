@@ -92,10 +92,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                // CÓDIGO QUE REALMENTE ENVIA O SMS
-                SmsManager sms = SmsManager.getDefault();
-                sms.sendTextMessage(numeroTelefone, null, mensagem, null, null);
-                Toast.makeText(getApplicationContext(), "Enviando mensagem.", Toast.LENGTH_LONG).show();
+                try {
+
+                    // CÓDIGO QUE REALMENTE ENVIA O SMS
+                    SmsManager sms = SmsManager.getDefault();
+                    sms.sendTextMessage(numeroTelefone, null, mensagem, null, null);
+                    Toast.makeText(getApplicationContext(), "Enviando mensagem.", Toast.LENGTH_LONG).show();
+
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Falha ao enviar mensagem SMS.", Toast.LENGTH_LONG).show();
+                }
 
                 dialog.dismiss();
 
