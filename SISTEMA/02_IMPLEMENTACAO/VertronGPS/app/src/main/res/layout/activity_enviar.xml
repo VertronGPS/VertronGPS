@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.edu.ifpb.vertrongps.activitys.MainActivity"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <LinearLayout
+        android:layout_width="312dp"
+        android:layout_height="447dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginStart="13dp"
+        android:orientation="vertical"
+        android:weightSum="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1">
+
+        <TextView
+            android:id="@+id/textViewOpcoes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Escolha um método de envio:" />
+
+        <Spinner
+            android:id="@+id/spinnerOpcoes"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/textViewMensagem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Informe a mensagem que deseja enviar:" />
+
+        <EditText
+            android:id="@+id/editTextMensagem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:ems="10"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/textViewContato"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Informe o número de contato:"
+            tools:layout_editor_absoluteX="33dp"
+            tools:layout_editor_absoluteY="223dp" />
+
+        <EditText
+            android:id="@+id/editTextContato"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:ems="10"
+            android:inputType="phone" />
+
+        <Button
+            android:id="@+id/buttonEnviar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enviar" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

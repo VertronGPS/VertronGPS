@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.edu.ifpb.vertrongps.MainActivity"
+    tools:context="br.edu.ifpb.vertrongps.activitys.MainActivity"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
 
@@ -47,7 +47,13 @@
             android:id="@+id/botaoEnviar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enviar mensagem teste" />
+            android:text="Enviar mensagem" />
+
+        <Button
+            android:id="@+id/botaoVisualizar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Visualizar mensagens" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
