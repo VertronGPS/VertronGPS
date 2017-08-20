@@ -13,6 +13,10 @@ import android.widget.Toast;
 
 import br.edu.ifpb.vertrongps.R;
 
+/**
+ * Created by andre on 01/05/17.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private Button botaoEnviar;
