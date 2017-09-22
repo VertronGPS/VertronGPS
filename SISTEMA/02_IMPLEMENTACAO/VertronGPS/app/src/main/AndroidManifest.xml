@@ -28,6 +28,13 @@
         <activity android:name=".activitys.MensagensActivity" android:label="Mensagens">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activitys.MainActivity"/>
         </activity>
+        <activity android:name=".activitys.BuscarActivity" android:label="Buscar">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activitys.MainActivity"/>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
         <receiver android:name=".SMSReceiver">
             <intent-filter >

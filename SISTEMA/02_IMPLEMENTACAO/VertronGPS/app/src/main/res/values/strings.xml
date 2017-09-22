@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">Vertron GPS</string>
     <string name="enviar_mensagem">Enviar Mensagem</string>
-    <string name="destinatario">Destinatário:</string>
+    <string name="destinatario">Remetente:</string>
     <string name="data">Data:</string>
     <string name="mensagem">Mensagem:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="vizualisar">Vizualisar</string>
+
+
 </resources>

@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button botaoEnviar;
     private Button botaoVisualizar;
+    private Button botaoBuscar;
+
     private static final int REQUEST_SEND_SMS = 255;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +32,16 @@ public class MainActivity extends AppCompatActivity {
 
         controlarSMS();
 
+        botaoBuscar = (Button) findViewById(R.id.botaoBuscar);
         botaoEnviar = (Button) findViewById(R.id.botaoEnviar);
         botaoVisualizar = (Button) findViewById(R.id.botaoVisualizar);
+
+        this.botaoBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, BuscarActivity.class));
+            }
+        });
 
         this.botaoEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
