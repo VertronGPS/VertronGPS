@@ -47,7 +47,7 @@ public class MensagensAdapter extends BaseAdapter {
 
         TextView tvNumero = (TextView) view.findViewById(R.id.tvNumero);
 
-        tvNumero.setText(mensagem.getDestinatario());
+        tvNumero.setText(mensagem.getRemetente());
 
         return view;
     }

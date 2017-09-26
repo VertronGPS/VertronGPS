@@ -6,12 +6,12 @@ package br.edu.ifpb.vertrongps.entities;
 public class Mensagem {
 
     private String texto;
-    private String destinatario;
+    private String remetente;
     private String data;
 
-    public Mensagem(String texto, String destinatario, String data) {
+    public Mensagem(String texto, String remetente, String data) {
         this.texto = texto;
-        this.destinatario = destinatario;
+        this.remetente = remetente;
         this.data = data;
     }
 
@@ -26,12 +26,12 @@ public class Mensagem {
         this.texto = texto;
     }
 
-    public String getDestinatario() {
-        return destinatario;
+    public String getRemetente() {
+        return remetente;
     }
 
-    public void setDestinatario(String destinatario) {
-        this.destinatario = destinatario;
+    public void setRemetente(String remetente) {
+        this.remetente = remetente;
     }
 
     public String getData() {
