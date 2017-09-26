@@ -1,7 +1,6 @@
 package br.edu.ifpb.vertrongps.activitys;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +24,7 @@ import br.edu.ifpb.vertrongps.R;
 public class BuscarActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
-    private Button botaoVizualisar;
+    private Button botaoVisualizar;
     private EditText latitude;
     private EditText longitude;
     private LatLng localizacao;
@@ -36,18 +35,18 @@ public class BuscarActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapa);
 
-        this.botaoVizualisar = (Button) findViewById(R.id.botaoVizualisar);
-        this.botaoVizualisar.setOnClickListener(new View.OnClickListener() {
+        this.botaoVisualizar = (Button) findViewById(R.id.botaoVisualizar);
+        this.botaoVisualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                // Se houver algum ponto já marcado ele ira limpar o mapa e marcar o novo ponto
                 try{
                     if(ponto == null){
-                        vizualisarMap();
+                        visualizarMap();
                     }
                     else{
                         mMap.clear();
-                        vizualisarMap();
+                        visualizarMap();
                     }
                 }
                 catch (Exception e){
@@ -75,7 +74,7 @@ public class BuscarActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
-    public void vizualisarMap(){
+    public void visualizarMap(){
         setLocalizacao();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

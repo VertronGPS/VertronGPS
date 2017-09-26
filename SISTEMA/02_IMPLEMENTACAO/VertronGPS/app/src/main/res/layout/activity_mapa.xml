@@ -43,7 +43,7 @@ android:weightSum="1">
     </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/botaoVizualisar"
+            android:id="@+id/botaoVisualizar"
             style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="145dp"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@ android:weightSum="1">
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="13dp"
             android:background="?attr/actionModeSplitBackground"
-            android:text="@string/vizualisar"
+            android:text="visualizar"
             android:textColor="@android:color/background_light" />
 
     </RelativeLayout>
