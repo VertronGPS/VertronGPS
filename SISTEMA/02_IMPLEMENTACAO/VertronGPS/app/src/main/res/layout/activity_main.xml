@@ -8,33 +8,6 @@
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
 
-    <FrameLayout
-        android:layout_width="220dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="82dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.418"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="205dp"
-            android:layout_height="wrap_content"
-            android:scaleType="fitStart"
-            app:srcCompat="@drawable/logo_interna" />
-
-
-    </FrameLayout>
-
     <LinearLayout
         android:layout_width="343dp"
         android:layout_height="156dp"
@@ -89,5 +62,32 @@
             android:text="Visualizar mensagens"
             android:textColor="@android:color/background_light" />
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="224dp"
+        android:layout_height="254dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="82dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintHorizontal_bias="0.975"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.324"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            app:srcCompat="@drawable/logo_interna" />
+
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
