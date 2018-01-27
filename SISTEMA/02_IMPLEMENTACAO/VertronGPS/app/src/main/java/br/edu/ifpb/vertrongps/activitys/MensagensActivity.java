@@ -10,8 +10,10 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ public class MensagensActivity extends AppCompatActivity {
     private MensagensAdapter adapter;
     private ArrayList<Mensagem> listaMensagens;
     private BroadcastReceiver broadcastReceiver;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +80,10 @@ public class MensagensActivity extends AppCompatActivity {
         }
 
         while (cursor.moveToNext()) {
-
-            Mensagem mensagem = new Mensagem(cursor.getString(cursor.getColumnIndexOrThrow("body")), cursor.getString(cursor.getColumnIndexOrThrow("address")), DateFormat.format("dd/MM/yyyy HH:mm", retornaData(cursor.getString(cursor.getColumnIndexOrThrow("date")))).toString());
-
-            listaMensagens.add(mensagem);
+            if (cursor.getString(cursor.getColumnIndexOrThrow("body")).contains("vertron_gps")) {
+                Mensagem mensagem = new Mensagem(cursor.getString(cursor.getColumnIndexOrThrow("body")), cursor.getString(cursor.getColumnIndexOrThrow("address")), DateFormat.format("dd/MM/yyyy HH:mm", retornaData(cursor.getString(cursor.getColumnIndexOrThrow("date")))).toString());
+                listaMensagens.add(mensagem);
+            }
         }
 
         return listaMensagens;
@@ -109,28 +112,31 @@ public class MensagensActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private String todoListToString(ArrayList<Mensagem> lista) {
-        StringBuilder builder = new StringBuilder();
-        for (Mensagem mensagem : lista) {
-            builder.append("Remetente: " + mensagem.getRemetente() + "\n");
-            builder.append("Mensagem: " + mensagem.getTexto() + "\n");
-            builder.append("Data: " + mensagem.getData() + "\n");
-            builder.append("\n");
-        }
-        return builder.toString();
-    }
-
     private void showDialog(Mensagem mensagem) {
         Dialog dialog = new Dialog(this);
         dialog.setTitle("Informação");
         dialog.setContentView(R.layout.dialog_layout);
-
         TextView tvDest = (TextView) dialog.findViewById(R.id.tvDest);
         tvDest.setText(mensagem.getRemetente());
         TextView tvData = (TextView) dialog.findViewById(R.id.tvData);
         tvData.setText(mensagem.getData());
         TextView tvMsg = (TextView) dialog.findViewById(R.id.tvMsg);
+        this.url = "";
+        String[] texto = mensagem.getTexto().split(":");
+        this.url = "https://maps.google.com/maps/?&z=10&q="+texto[2]+","+texto[3];
         tvMsg.setText(mensagem.getTexto());
+        Button botaoAbrirLink = (Button) dialog.findViewById(R.id.botaoAbrirLink);
+
+        botaoAbrirLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(url));
+                startActivity(browserIntent);
+            }
+        });
+
         dialog.show();
     }
 
