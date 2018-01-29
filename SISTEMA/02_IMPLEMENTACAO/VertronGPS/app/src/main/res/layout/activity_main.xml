@@ -24,16 +24,6 @@
         android:layout_marginBottom="16dp"
         android:id="@+id/linearLayout">
 
-        <Button
-            android:id="@+id/botaoBuscar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="?attr/actionModeSplitBackground"
-            android:text="Buscar"
-            android:textColor="@android:color/background_light"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="-43dp" />
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="5dp">
@@ -45,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="?attr/actionModeSplitBackground"
-            android:text="Enviar mensagem"
+            android:text="@string/localizar"
             android:textColor="@android:color/background_light" />
 
         <FrameLayout
@@ -59,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="?attr/actionModeSplitBackground"
-            android:text="Visualizar mensagens"
+            android:text="@string/historico"
             android:textColor="@android:color/background_light" />
     </LinearLayout>
 

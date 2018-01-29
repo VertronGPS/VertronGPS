@@ -31,10 +31,9 @@ public class SMSReceiver extends BroadcastReceiver {
                 infoSMS += "\n";
             }
 
-            Toast.makeText(context, infoSMS, Toast.LENGTH_LONG).show();
-
+            if (infoSMS.contains("vertrongps")){
+                Toast.makeText(context, "Retorno de requisição recebido", Toast.LENGTH_LONG).show();
+            }
         }
-
     }
-
 }

@@ -4,70 +4,63 @@ package br.edu.ifpb.vertrongps.activitys;
  * Created by emerson on 16/08/17.
  */
 
-import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.os.Build;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import br.edu.ifpb.vertrongps.R;
+import br.edu.ifpb.vertrongps.entities.Contato;
 
 public class EnviarActivity extends AppCompatActivity {
-    private EditText mensagem;
-    private EditText numeroTelefone;
+    private AutoCompleteTextView acObjText;
+    private EditText edtPassword;
     private String array_spinner[];
     private Button botaoEnviar;
+    private Button botaoConfirmar;
+    private Button botaoAddContato;
     private Spinner spinner;
     private String msg;
-    private static final int REQUEST_SEND_SMS = 255;
+    private Dialog dialog;
+    private ArrayList<Contato> contatos = new ArrayList<Contato>();
+    private ArrayList<String> nomes = new ArrayList<String>();
 
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviar);
 
-        array_spinner = new String[4];
-        array_spinner[0] = "Selecione";
-        array_spinner[1] = "Ping";
-        array_spinner[2] = "GetLocation";
-        array_spinner[3] = "Personalizada";
+        array_spinner = new String[] {"Selecione", "ping", "getlocation"};
         spinner = (Spinner) findViewById(R.id.spinnerOpcoes);
-        ArrayAdapter adapter = new ArrayAdapter(this,
-                android.R.layout.simple_spinner_item, array_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, array_spinner);
         spinner.setAdapter(adapter);
 
-        AdapterView.OnItemSelectedListener escolha = new AdapterView.OnItemSelectedListener(){
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
-                String item = spinner.getSelectedItem().toString();
-                if (item.equals("Ping") || item.equals("GetLocation") || item.equals("Selecione")){
-                    mensagem.setEnabled(false);
-                }
-                else{
-                    mensagem.setEnabled(true);
-                }
-            }
+        showContacts();
 
-            public void onNothingSelected(AdapterView<?> parent){
+        acObjText = (AutoCompleteTextView) findViewById(R.id.autoCompleteContatos);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, nomes);
+        acObjText.setAdapter(arrayAdapter);
 
-            }
-        };
-
-        spinner.setOnItemSelectedListener(escolha);
-
-        mensagem = (EditText) findViewById(R.id.editTextMensagem);
-        numeroTelefone = (EditText) findViewById(R.id.editTextContato);
         botaoEnviar = (Button) findViewById(R.id.buttonEnviar);
+
+        botaoAddContato = (Button) findViewById(R.id.botaoAddContato);
+
         botaoEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,44 +68,75 @@ public class EnviarActivity extends AppCompatActivity {
             }
         });
 
+        botaoAddContato.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addContato(v);
+            }
+        });
+
     }
 
-    // SOBRESCREVENDO MÉTODO QUE É CHAMADO SEMPRE QUE UMA REQUISIÇÃO DE PERMISSÃO É SOLICITADA
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_SEND_SMS) {
-
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                enviarSMS();
+    public void addContato(View view) {
+        Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+        intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+        if (!acObjText.getText().toString().trim().equals("")) {
+            if (buscaNumero(acObjText.getText().toString()) == null) {
+                intent.putExtra(ContactsContract.Intents.Insert.NAME, acObjText.getText().toString());
+                finish();
+                startActivity(intent);
             }
+            Toast.makeText(this, "Já existe um contato com o mesmo nome", Toast.LENGTH_LONG).show();
+        }
+        Toast.makeText(this, "Informe um nome para o contato", Toast.LENGTH_LONG).show();
+    }
 
+    private void showContacts() {
+
+        Cursor cursor_contatos = null;
+        ContentResolver contentResolver = getContentResolver();
+
+        try {
+            cursor_contatos = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        } catch (Exception ex) {
+            Log.e("Erro em contatos", ex.getMessage());
         }
 
-        else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+        if (cursor_contatos.getCount() > 0) {
 
+            while (cursor_contatos.moveToNext()) {
+                Contato contato = new Contato();
+                String contato_id = cursor_contatos.getString(cursor_contatos.getColumnIndex(ContactsContract.Contacts._ID));
+                String contato_nome = cursor_contatos.getString(cursor_contatos.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                contato.setNome(contato_nome);
+
+                int hasPhoneNumber = Integer.parseInt(cursor_contatos.getString(cursor_contatos.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+                if (hasPhoneNumber > 0) {
+
+                    Cursor phoneCursor = contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+                            , null
+                            , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?"
+                            , new String[]{contato_id}
+                            , null);
+
+                    while (phoneCursor.moveToNext()) {
+                        String phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        contato.setNumero(phoneNumber);
+                    }
+                    phoneCursor.close();
+                }
+                contatos.add(contato);
+                nomes.add(contato.getNome());
+            }
+        }
     }
 
     public void controlarSMS(View v) {
 
         try {
 
-            // VERIFICANDO SE É PRECISO PERDIR A PERMISSÃO PARA ENVIAR SMS
-            // OBS.: A PARTIR DO MARSHMALLOW É PRECISO
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
-                enviarSMS();
-            } else {
-
-                // CASO NÃO HAJA PERMISSÃO PARA ENVIAR SMS, UMA BREVE EXPLICAÇÃO SERÁ EXIBIDA
-                if (shouldShowRequestPermissionRationale(Manifest.permission.SEND_SMS)) {
-                    Toast.makeText(this, "É necessária permissão para enviar SMS.", Toast.LENGTH_LONG).show();
-                }
-
-                // SOLICITANTO PERMISSÃO PARA ENVIAR SMS
-                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, REQUEST_SEND_SMS);
-
-            }
+            enviarSMS();
 
         } catch (Exception e) {
 
@@ -123,25 +147,36 @@ public class EnviarActivity extends AppCompatActivity {
 
     }
 
+    public String buscaNumero(String nome){
+        String numero = "";
+        for (Contato contato : contatos){
+            if (contato.getNome().equals(nome)){
+                numero = contato.getNumero();
+            }
+        }
+        if (!numero.equals("")){
+            return numero;
+        }
+        else {
+            return null;
+        }
+    }
+
     public void enviarSMS() {
 
-        if(!spinner.getSelectedItem().toString().equals("Selecione")){
+        if(spinner.getSelectedItemPosition() != 0){
 
-            if(spinner.getSelectedItem().toString().equals("Ping")){
+            if(spinner.getSelectedItemPosition() == 1){
                 msg = "ping";
             }
 
             else{
-                if(spinner.getSelectedItem().toString().equals("GetLocation")){
+                if(spinner.getSelectedItemPosition() == 2){
                     msg = "getlocation";
-                }
-
-                else{
-                    msg = mensagem.getText().toString();
                 }
             }
 
-            if(!numeroTelefone.getText().toString().isEmpty()){
+            if(buscaNumero(acObjText.getText().toString()) != null){
 
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -155,12 +190,7 @@ public class EnviarActivity extends AppCompatActivity {
                         try {
 
                             // CÓDIGO QUE REALMENTE ENVIA O SMS
-                            SmsManager sms = SmsManager.getDefault();
-                            sms.sendTextMessage(numeroTelefone.getText().toString(), null, msg, null, null);
-                            mensagem.setText("");
-                            numeroTelefone.setText("");
-                            spinner.setSelection(0);
-                            Toast.makeText(getApplicationContext(), "Enviando mensagem.", Toast.LENGTH_LONG).show();
+                            showDialog();
 
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), "Falha ao enviar mensagem SMS.", Toast.LENGTH_LONG).show();
@@ -185,7 +215,7 @@ public class EnviarActivity extends AppCompatActivity {
             }
 
             else{
-                Toast.makeText(getApplicationContext(), "Informe um número de contato!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Contato não encontrado!", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -193,5 +223,32 @@ public class EnviarActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Escolha um método de envio!", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void showDialog() {
+        dialog = new Dialog(this);
+        dialog.setTitle("Informação");
+        dialog.setContentView(R.layout.dialog_password);
+        edtPassword = (EditText) dialog.findViewById(R.id.editTextPassword);
+        botaoConfirmar = (Button) dialog.findViewById(R.id.botaoConfirmar);
+
+        botaoConfirmar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtPassword.getText().toString().equals("3636")){
+                    SmsManager sms = SmsManager.getDefault();
+                    sms.sendTextMessage(buscaNumero(acObjText.getText().toString()), null, msg.concat(":").concat(edtPassword.getText().toString()), null, null);
+                    startActivity(new Intent(EnviarActivity.this, MainActivity.class));
+                    Toast.makeText(getApplicationContext(), "Mensagem enviada, aguarde o retorno da requisição.", Toast.LENGTH_LONG).show();
+                    dialog.hide();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Senha errada!", Toast.LENGTH_LONG).show();
+                    edtPassword.setText("");
+                }
+            }
+        });
+
+        dialog.show();
     }
 }

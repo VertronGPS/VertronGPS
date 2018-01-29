@@ -27,7 +27,7 @@
             android:id="@+id/textViewOpcoes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Escolha um método de envio:" />
+            android:text="@string/metodo" />
 
         <Spinner
             android:id="@+id/spinnerOpcoes"
@@ -36,34 +36,36 @@
             android:layout_marginBottom="20dp" />
 
         <TextView
-            android:id="@+id/textViewMensagem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Informe a mensagem que deseja enviar:" />
-
-        <EditText
-            android:id="@+id/editTextMensagem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:ems="10"
-            android:inputType="text" />
-
-        <TextView
             android:id="@+id/textViewContato"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Informe o número de contato:"
+            android:text="@string/contato"
             tools:layout_editor_absoluteX="33dp"
             tools:layout_editor_absoluteY="223dp" />
 
-        <EditText
-            android:id="@+id/editTextContato"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:ems="10"
-            android:inputType="phone" />
+        <LinearLayout
+            android:layout_width="312dp"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="36dp"
+            tools:layout_editor_absoluteY="160dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteContatos"
+                android:layout_width="185dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp" />
+
+            <Button
+                android:id="@+id/botaoAddContato"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryDark"
+                android:text="@string/add_contato" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/buttonEnviar"
@@ -71,7 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"
-            android:text="Enviar" />
+            android:layout_marginTop="10dp"
+            android:text="@string/enviar" />
 
     </LinearLayout>
 

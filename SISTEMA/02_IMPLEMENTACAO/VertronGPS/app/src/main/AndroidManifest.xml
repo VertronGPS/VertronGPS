@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -21,20 +23,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activitys.EnviarActivity" android:label="Enviar Mensagem">
+        <activity android:name=".activitys.EnviarActivity" android:label="Localizar">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activitys.MainActivity"/>
         </activity>
 
-        <activity android:name=".activitys.MensagensActivity" android:label="Mensagens">
+        <activity android:name=".activitys.MensagensActivity" android:label="Histórico de localizações">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activitys.MainActivity"/>
         </activity>
-        <activity android:name=".activitys.BuscarActivity" android:label="Buscar">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activitys.MainActivity"/>
-        </activity>
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
 
         <receiver android:name=".SMSReceiver">
             <intent-filter >

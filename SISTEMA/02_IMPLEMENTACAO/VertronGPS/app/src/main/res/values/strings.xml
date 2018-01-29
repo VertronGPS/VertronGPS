@@ -1,12 +1,16 @@
 <resources>
     <string name="app_name">Vertron GPS</string>
-    <string name="enviar_mensagem">Enviar Mensagem</string>
+    <string name="localizar">Localizar</string>
+    <string name="historico">Histórico de localizações</string>
     <string name="remetente">Remetente:</string>
     <string name="data">Data:</string>
     <string name="mensagem">Mensagem:</string>
-    <string name="latitude">Latitude:</string>
-    <string name="longitude">Longitude:</string>
-    <string name="vizualisar">Vizualisar</string>
-
+    <string name="password">Informe a senha:</string>
+    <string name="contato">Informe o contato:</string>
+    <string name="metodo">Escolha um dos métodos de localização:</string>
+    <string name="add_contato">Add Contato</string>
+    <string name="enviar">Enviar</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="visualizar">Visualizar no mapa</string>
 
 </resources>

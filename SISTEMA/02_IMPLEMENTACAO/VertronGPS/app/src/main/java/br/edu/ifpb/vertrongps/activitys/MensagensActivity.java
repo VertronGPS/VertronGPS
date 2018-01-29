@@ -7,23 +7,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import br.edu.ifpb.vertrongps.entities.Mensagem;
-import br.edu.ifpb.vertrongps.adapters.MensagensAdapter;
-import br.edu.ifpb.vertrongps.R;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import br.edu.ifpb.vertrongps.R;
+import br.edu.ifpb.vertrongps.adapters.MensagensAdapter;
+import br.edu.ifpb.vertrongps.entities.Mensagem;
 
 /**
  * Created by emerson on 16/08/17.
@@ -80,13 +79,19 @@ public class MensagensActivity extends AppCompatActivity {
         }
 
         while (cursor.moveToNext()) {
-            if (cursor.getString(cursor.getColumnIndexOrThrow("body")).contains("vertron_gps")) {
-                Mensagem mensagem = new Mensagem(cursor.getString(cursor.getColumnIndexOrThrow("body")), cursor.getString(cursor.getColumnIndexOrThrow("address")), DateFormat.format("dd/MM/yyyy HH:mm", retornaData(cursor.getString(cursor.getColumnIndexOrThrow("date")))).toString());
-                listaMensagens.add(mensagem);
+            Mensagem mensagem = new Mensagem(cursor.getString(cursor.getColumnIndexOrThrow("body")), cursor.getString(cursor.getColumnIndexOrThrow("address")), DateFormat.format("dd/MM/yyyy HH:mm", retornaData(cursor.getString(cursor.getColumnIndexOrThrow("date")))).toString());
+            listaMensagens.add(mensagem);
+        }
+
+        ArrayList<Mensagem> msgsFiltradas = new ArrayList<Mensagem>();
+
+        for (Mensagem msg : listaMensagens){
+            if (msg.getTexto().contains("vertrongps")){
+                msgsFiltradas.add(msg);
             }
         }
 
-        return listaMensagens;
+        return msgsFiltradas;
     }
 
     public Date retornaData(String data) {
@@ -121,21 +126,27 @@ public class MensagensActivity extends AppCompatActivity {
         TextView tvData = (TextView) dialog.findViewById(R.id.tvData);
         tvData.setText(mensagem.getData());
         TextView tvMsg = (TextView) dialog.findViewById(R.id.tvMsg);
-        this.url = "";
-        String[] texto = mensagem.getTexto().split(":");
-        this.url = "https://maps.google.com/maps/?&z=10&q="+texto[2]+","+texto[3];
-        tvMsg.setText(mensagem.getTexto());
         Button botaoAbrirLink = (Button) dialog.findViewById(R.id.botaoAbrirLink);
+        if (!mensagem.getTexto().contains("gpsfail") && mensagem.getTexto().contains("getlocation")){
+            this.url = "";
+            String[] texto = mensagem.getTexto().split(":");
+            this.url = "https://maps.google.com/maps/?&z=10&q="+texto[2]+","+texto[3];
 
-        botaoAbrirLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(url));
-                startActivity(browserIntent);
-            }
-        });
+            botaoAbrirLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(url));
+                    startActivity(browserIntent);
+                }
+            });
+        }
+
+        else {
+            botaoAbrirLink.setVisibility(View.INVISIBLE);
+        }
+        tvMsg.setText(mensagem.getTexto());
 
         dialog.show();
     }
